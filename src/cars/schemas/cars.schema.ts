@@ -20,10 +20,10 @@ export class Cars {
     yearModel:string;
 
     @Prop({required: true})
-    value:number;
+    value:string;
 
     @Prop({required: true})
-    kilometers:number;
+    kilometers:string;
 
     @Prop({required: true})
     color:string;
@@ -31,8 +31,8 @@ export class Cars {
     @Prop({required: true})
     plate:string;
 
-    // @Prop({required: true})
-    // photos:string[];
+    @Prop({required: true})
+    photo:string;
 
 }
 

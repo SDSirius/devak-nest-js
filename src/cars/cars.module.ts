@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Cars, CarsSchema } from './schemas/cars.schema';
 import { SoldCar, SoldCarSchema } from './schemas/soldcars.schema';
 import { UserModule } from 'src/user/user.module';
+// import { S3Service } from './utils/s3Upload.Utils.';
 
 @Module({
   imports: [

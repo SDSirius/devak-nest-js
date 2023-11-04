@@ -9,6 +9,7 @@ export class UserController {
     constructor(private readonly userService: UserService) { }
 
     @Get()
+    @IsPublic()
     async getUser(@Request() req) {
         const { userId } = req?.user;
         const user = await this.userService.getUserById(userId);
@@ -26,6 +27,7 @@ export class UserController {
     }
 
     @Get(':id')
+    @IsPublic()
     async getUserById(@Param('id') id: string) {
         const user = await this.userService.getUserById(id)
 

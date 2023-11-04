@@ -1,0 +1,1 @@
+npm install aws-sdk multer-s3 @types/multer-s3

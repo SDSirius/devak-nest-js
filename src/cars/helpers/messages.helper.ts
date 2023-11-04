@@ -9,4 +9,5 @@ export const CarMessagesHelper = {
     CAR_USED_KILOMETERS_NEEDED: "É necessário informar a quilometragem do veículo.",
     CAR_PLATE_NEEDED: "É necessário informar a placa de identificação do veículo.",
     CAR_PLATE_ALREADY_IN_USE: "Esta placa ja foi cadastrada!",
+    CAR_PIC_NEDDED:"Necessário enviar uma foto do carro."
 }
