@@ -1,8 +1,10 @@
-import { Controller, Get, Request, BadRequestException, Body, Put, HttpCode, HttpStatus, Param } from '@nestjs/common';
+import { Controller, Get, Request, BadRequestException, Body, Put, HttpCode, HttpStatus, Param, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { UpdateUserDto } from './dtos/updateuser.dto';
 import { UserMessagesHelper } from './helpers/messages.helper';
 import { UserService } from './user.service'
 import { IsPublic } from 'src/auth/decorators/ispublic.decorator';
+import { uploadToS3 }  from '../cars/utils/uploadToS3.util'
+import { FileInterceptor } from '@nestjs/platform-express/multer';
 
 @Controller('user')
 export class UserController {
@@ -21,7 +23,7 @@ export class UserController {
         return {
             name: user.name,
             email: user.email,
-            photo: user.photo,
+            file: user.file,
             id: user._id
         }
     }
@@ -40,8 +42,11 @@ export class UserController {
 
     @Put()
     @HttpCode(HttpStatus.OK)
-    async updateUser(@Request() req, @Body() dto: UpdateUserDto) {
+    @UseInterceptors(FileInterceptor('file'))
+    async updateUser(@Request() req, @Body() dto: UpdateUserDto,@UploadedFile() file: any) {
+        const folderName = process.env.USER_FOLDER_NAME
+        const urlfile = await uploadToS3(file, folderName);
         const { userId } = req?.user;
-        await this.userService.updateUser(userId, dto);
+        await this.userService.updateUser(userId, dto, urlfile as string);
     }
 }

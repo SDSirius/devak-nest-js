@@ -32,7 +32,7 @@ export class Cars {
     plate:string;
 
     @Prop({required: true})
-    photo:string;
+    file:string;
 
 }
 

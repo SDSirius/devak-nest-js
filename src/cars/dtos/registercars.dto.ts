@@ -25,7 +25,7 @@ export class RegisterCarsDto {
     @Length(7, 7, { message: CarMessagesHelper.CAR_PLATE_NEEDED  })
     plate:string;
 
-    @IsString({message: CarMessagesHelper.CAR_PIC_NEDDED})
-    photo:string;
+    // @IsString({message: CarMessagesHelper.CAR_PIC_NEDDED})
+    file:any;
     
 }

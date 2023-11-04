@@ -7,26 +7,20 @@ import { UpdateCarDto } from './dtos/updatecars.dto';
 import { CarMessagesHelper } from './helpers/messages.helper';
 import { Cars, CarsDocument } from './schemas/cars.schema';
 import { SoldCar ,SoldCarDocument } from './schemas/soldcars.schema';
-import * as AWS from 'aws-sdk';
+
+
 
 
 @Injectable()
 export class CarsService {
     private readonly logger = new Logger(CarsService.name);
-    private clientS3: AWS.S3;
-
+    
     constructor(
         @InjectModel(Cars.name) private readonly carModel: Model<CarsDocument>,
         @InjectModel(SoldCar.name) private readonly soldModel: Model<SoldCarDocument>,
         private readonly userService: UserService,
         
-    ){
-        this.clientS3 = new AWS.S3({
-            accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-            region: process.env.AWS_REGION,
-          });
-    }
+    ){}
 
     async getAllCars(){
         return await this.carModel.find(); //testado 
@@ -56,9 +50,9 @@ export class CarsService {
         return await this.carModel.findOne({_id: carId});
     }
 
-    async insertCar(userId: string, dto: RegisterCarsDto, urlphoto:string ) {
+    async insertCar(userId: string, dto: RegisterCarsDto, urlfile:string ) {
         try {
-            console.log(urlphoto);
+            console.log(urlfile);
             console.log(dto);
             const user = await this.userService.getUserById(userId);
     
@@ -72,7 +66,7 @@ export class CarsService {
                 const Car = {
                     user,
                     ...dto,
-                    photo: urlphoto,
+                    file: urlfile,
                 };
         
                 const createdCar = new this.carModel(Car);
@@ -85,33 +79,6 @@ export class CarsService {
         }
 
     }
-
-    async handleImg (photo:any){
-        try {
-            console.log(photo)
-            const upPhotoParams = {
-                Bucket: process.env.AWS_BUCKET_NAME,
-                Key:Date.now().toString() + "-" + photo.originalName,
-                body: photo.buffer,
-                ACL: "public-read"
-            }
-
-            return new Promise((resolve, reject) =>{
-                this.clientS3.upload(upPhotoParams, (error, data) =>{
-                    if (error) {
-                        reject(error)
-                    }
-                    resolve({ imageUrl: data.Location})
-                })
-            }
-        )
-
-        }catch (error) {
-        console.error(`Erro ao fazer upload da imagem: ${error}`);
-        }
-    }
-      
-
 
     async deleteSoldCar(userId:String, carId:string){
         try {
@@ -130,7 +97,7 @@ export class CarsService {
                 yearModel:car.yearModel,
                 color:car.color,
                 plate:car.plate,
-                photo:car.photo,
+                file:car.file,
                 sold:true
             }
             await this.soldModel.create(soldCar);
@@ -141,7 +108,7 @@ export class CarsService {
         }
     }
 
-    async updateCar(carId:string, userId:string, dto: any, urlphoto:string){
+    async updateCar(carId:string, userId:string, dto: any, urlfile:string){
         try {
             const user = await this.userService.getUserById(userId);
             const car = await this.carModel.findOne({user, _id: carId});
@@ -176,9 +143,9 @@ export class CarsService {
             if (dto.value) newCarSpecs.value = dto.value;
             else newCarSpecs.value = car.value;
 
-            if (urlphoto) newCarSpecs.photo = urlphoto;
-            else newCarSpecs.photo = car.photo;
-            // car.photo = dto.photo;
+            if (urlfile) newCarSpecs.file = urlfile;
+            else newCarSpecs.file = car.file;
+            
             console.log("============================================================================================")
             
 

@@ -6,5 +6,5 @@ export class UpdateUserDto {
     name: string;
 
     @IsString()
-    photo: string;
+    file: any;
 }

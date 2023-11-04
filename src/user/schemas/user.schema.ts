@@ -15,7 +15,7 @@ export class User {
     password:string;
 
     @Prop()
-    photo:string;
+    file:string;
 
     
 }

@@ -8,6 +8,6 @@ export class GetCarsDto{
     value:number;
     plate:string;
     kilometers:number;
-    photo:string;
+    file:string;
 }
 

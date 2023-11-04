@@ -15,5 +15,5 @@ export class RegisterDto {
     password:string;
 
     @IsString()
-    photo:string;
+    file:any;
 }

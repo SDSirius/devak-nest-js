@@ -33,5 +33,5 @@ export class UpdateCarDto {
 
     @IsOptional()
     @IsString({message: CarMessagesHelper.CAR_PIC_NEDDED})
-    photo?: string;
+    file?: any;
 }

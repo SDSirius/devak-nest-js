@@ -5,36 +5,21 @@ import { GetCarsDto } from './dtos/getcars.dto';
 import { RegisterCarsDto } from './dtos/registercars.dto';
 import { UpdateCarDto } from './dtos/updatecars.dto';
 import { IsPublic } from 'src/auth/decorators/ispublic.decorator';
-// import { FormDataRequest } from 'nestjs-form-data';
+import { uploadToS3 }  from './utils/uploadToS3.util'
 
 
 @Controller('cars')
 export class CarsController {
 
     constructor(
-        private readonly carService:CarsService
+        private readonly carService:CarsService,
     ){}
     
     @Get()
     @HttpCode(HttpStatus.OK)
     @IsPublic()
     async getAllCars( ){
-
-        const result = await this.carService.getAllCars();
-
-        return result
-        // .map(car => ({
-        //     id: car._id.toString(),
-        //     user : car.user.toString(),
-        //     name: car.name,
-        //     brand: car.brand,
-        //     yearModel: car.yearModel,
-        //     value:car.value,
-        //     color:car.color,
-        //     plate:car.plate,
-        //     kilometers:car.kilometers,
-        //     photo: car.photo,
-        // }) as GetCarsDto);
+        return await this.carService.getAllCars();
     }
 
     @Get("user/:id")
@@ -42,20 +27,7 @@ export class CarsController {
     @IsPublic()
     async getCarsByUser(@Param() params){
         const { id } = params;
-
-        const result = await this.carService.getCarsByUser( id);
-
-        return result
-        // .map(car => ({
-        //     id: car._id.toString(),
-        //     user : car.user.toString(),
-        //     name: car.name,
-        //     brand: car.brand,
-        //     yearModel: car.yearModel,
-        //     color:car.color,
-        //     photo: car.photo,
-        //     sold: car.sold ? car.sold: "Disponivel",
-        // }) );
+        return await this.carService.getCarsByUser( id);
     }
 
     @Get(':id')
@@ -63,20 +35,16 @@ export class CarsController {
     @IsPublic()
     async getCarById(@Param() params){
         const { id } = params;
-
         return await this.carService.getCarById(id);
     }
 
     @Post('upload')
-    @UseInterceptors(FileInterceptor('photo'))
-    async registerCar(@Request() req, @Body() dto: RegisterCarsDto, @UploadedFile() photo: any) {
-        console.log(dto);
-        console.log(req?.user);
-        console.log(photo);
-        const urlPhoto = await this.carService.handleImg(photo)
-        console.log(urlPhoto)
+    @UseInterceptors(FileInterceptor('file'))
+    async registerCar(@Request() req, @Body() dto: RegisterCarsDto, @UploadedFile() file: any) {
+        const folderName = process.env.CAR_FOLDER_NAME
+        const urlfile = await uploadToS3(file, folderName);
         const { userId } = req.user;
-        await this.carService.insertCar(userId, dto, urlPhoto as string);
+        await this.carService.insertCar(userId, dto, urlfile as string);
         return "Carro Registrado com sucesso!";
     }
 
@@ -89,43 +57,26 @@ export class CarsController {
     }
 
     @Put(':id')
-    @UseInterceptors(FileInterceptor('photo'))
-    async updateCarDetails(@Request() req, @Param() params, @Body() dto: any,@UploadedFile() photo: any){
-        console.log(dto)
-        const urlphoto = await this.carService.handleImg(photo)
+    @UseInterceptors(FileInterceptor('file'))
+    async updateCarDetails(@Request() req, @Param() params, @Body() dto: any,@UploadedFile() file: any){
+        const folderName = process.env.CAR_FOLDER_NAME
+        const urlfile = await uploadToS3(file, folderName);
         const { userId } = req?.user;
         const { id } = params;
-        await this.carService.updateCar(id, userId, dto, urlphoto as string);
+        await this.carService.updateCar(id, userId, dto, urlfile as string);
     }
 
     @Get("filters/:filtro")
     @HttpCode(HttpStatus.OK)
     @IsPublic()
     async getFilter(@Param('filtro') filtro: string) {
-        const result = await this.carService.getFilterByCategory(filtro);
-        return result;
+        return await this.carService.getFilterByCategory(filtro);
     }
 
     @Post('filters')
     @HttpCode(HttpStatus.OK)
     @IsPublic()
     async getFilteredMovies(@Body() filters: any) {
-        const result = await this.carService.getCarsByFilter(filters);
-    
-        return result;
-    //     .map(car => ({
-    //     id: car._id.toString(),
-    //     user : car.user.toString(),
-    //     name: car.name,
-    //     brand: car.brand,
-    //     yearModel: car.yearModel,
-    //     value:car.value,
-    //     color:car.color,
-    //     plate:car.plate,
-    //     kilometers:car.kilometers,
-    //     photo: car.photo,
-    // }) as GetCarsDto);
+        return await this.carService.getCarsByFilter(filters);
     }
-
-
 }
