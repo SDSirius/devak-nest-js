@@ -44,7 +44,8 @@ export class UserService {
         return await this.userModel.findById(id);
     }
 
-    async updateUser(id: string, dto: UpdateUserDto){
+    async updateUser(id: string, dto: UpdateUserDto, imgUrl:string){
+        dto.file = imgUrl;
         return await this.userModel.findByIdAndUpdate(id, dto);
     }
 }

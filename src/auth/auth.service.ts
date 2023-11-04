@@ -33,8 +33,9 @@ export class AuthService{
     }
 
     // REGISTER NÃO FICA MELHOR NA CAMADA DE USER?
-    async register(dto: RegisterDto){
+    async register(dto: RegisterDto, imgUrl:string){
         this.logger.debug('register - started');
+        dto.file = imgUrl;
         if(await this.userService.existsByEmail(dto.email)){
             throw new BadRequestException(UserMessagesHelper.REGISTER_EXIST_EMAIL_ACCOUNT);
         }
