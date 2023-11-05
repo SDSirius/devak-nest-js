@@ -7,6 +7,7 @@ import { UpdateCarDto } from './dtos/updatecars.dto';
 import { CarMessagesHelper } from './helpers/messages.helper';
 import { Cars, CarsDocument } from './schemas/cars.schema';
 import { SoldCar ,SoldCarDocument } from './schemas/soldcars.schema';
+import { error } from 'console';
 
 
 
@@ -45,9 +46,25 @@ export class CarsService {
             console.log(error)
         }
     }
+    async addViewsToCar (carId:string) {
+        try{
+            const car = await this.carModel.findByIdAndUpdate(carId, { $inc: { views: 1 } }, { new: true });
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     async getCarById(carId:string ){
-        return await this.carModel.findOne({_id: carId});
+        try {
+            await this.addViewsToCar(carId);
+            const car = await this.carModel.findOne({_id: carId});
+
+            if (!car) {
+                throw new BadRequestException(CarMessagesHelper.UPDATE_CAR_NOT_FOUND);
+            }
+        } catch (error) {
+            
+        }
     }
 
     async insertCar(userId: string, dto: RegisterCarsDto, urlfile:string ) {

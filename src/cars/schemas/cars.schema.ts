@@ -34,6 +34,10 @@ export class Cars {
     @Prop({required: true})
     file:string;
 
+    @Prop({type: Number, default: 0})
+    views: number;
+
+
 }
 
 export const CarsSchema = SchemaFactory.createForClass(Cars);

@@ -27,5 +27,7 @@ export class RegisterCarsDto {
 
     // @IsString({message: CarMessagesHelper.CAR_PIC_NEDDED})
     file:any;
+
+    views:number;
     
 }

@@ -9,5 +9,6 @@ export class GetCarsDto{
     plate:string;
     kilometers:number;
     file:string;
+    views:number;
 }
 
