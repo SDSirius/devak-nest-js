@@ -7,9 +7,6 @@ import { UpdateCarDto } from './dtos/updatecars.dto';
 import { CarMessagesHelper } from './helpers/messages.helper';
 import { Cars, CarsDocument } from './schemas/cars.schema';
 import { SoldCar ,SoldCarDocument } from './schemas/soldcars.schema';
-import { error } from 'console';
-
-
 
 
 @Injectable()

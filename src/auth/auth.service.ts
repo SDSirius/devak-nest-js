@@ -32,7 +32,6 @@ export class AuthService{
         }
     }
 
-    // REGISTER NÃO FICA MELHOR NA CAMADA DE USER?
     async register(dto: RegisterDto, imgUrl:string){
         this.logger.debug('register - started');
         dto.file = imgUrl;
