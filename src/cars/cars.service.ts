@@ -20,7 +20,26 @@ export class CarsService {
         
     ){}
 
+    async find(term: string) {
+        const query = {
+          $or: [
+            { name: { $regex: new RegExp(term, 'i') } },
+            { brand: { $regex: new RegExp(term, 'i') } },
+            { yearModel: { $regex: new RegExp(term, 'i') } },
+            { value: { $regex: new RegExp(term, 'i') } },
+            { kilometers: { $regex: new RegExp(term, 'i') } },
+            { color: { $regex: new RegExp(term, 'i') } }
+          ],
+        };
+        console.log(term)
+        this.logger.debug(`encontrou carros com a busca por ${term} !`);
+        const result = await this.carModel.find(query);
+        console.log(result)
+        return result;
+      }
+
     async getAllCars(){
+        this.logger.debug("Pegou todos os carros!");
         return await this.carModel.find(); //testado 
     }
 
@@ -66,6 +85,7 @@ export class CarsService {
 
     async insertCar(userId: string, dto: RegisterCarsDto, urlfile:string ) {
         try {
+            console.log(userId);
             console.log(urlfile);
             console.log(dto);
             const user = await this.userService.getUserById(userId);
@@ -81,12 +101,16 @@ export class CarsService {
                     user,
                     ...dto,
                     file: urlfile,
-                };
+                } ;
         
                 const createdCar = new this.carModel(Car);
                 return await createdCar.save();
             }else{
-                throw new BadRequestException(CarMessagesHelper.CAR_PLATE_ALREADY_IN_USE);
+                // throw new BadRequestException(CarMessagesHelper.CAR_PLATE_ALREADY_IN_USE);
+                console.log(userId);
+                console.log(urlfile);
+                console.log(dto);
+                return dto
             }
         } catch (error) {
             console.log(error)
@@ -186,6 +210,7 @@ export class CarsService {
     async getCarsByFilter(filters: any){
         try {
             type FilterQuery = {
+                views?:number;
                 name?: string;
                 brand?: string;
                 yearModel?: string;
@@ -197,7 +222,7 @@ export class CarsService {
             let cars;
               
             const filterAttributes = [
-                'name', 'brand', 'yearModel', 'color'
+                'views','name', 'brand', 'yearModel', 'color'
             ];
             
             for (const attr of filterAttributes) {

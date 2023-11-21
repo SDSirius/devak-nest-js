@@ -23,7 +23,7 @@ export class UserController {
         return {
             name: user.name,
             email: user.email,
-            file: user.file,
+            avatar: user.file,
             id: user._id
         }
     }
@@ -37,9 +37,14 @@ export class UserController {
             throw new BadRequestException(UserMessagesHelper.GET_USER_NOT_FOUND)
         }
 
-        return user
+        return {
+            name: user.name,
+            email: user.email,
+            avatar: user.file,
+            id: user._id
+        }
     }
-
+ 
     @Put()
     @HttpCode(HttpStatus.OK)
     @UseInterceptors(FileInterceptor('file'))

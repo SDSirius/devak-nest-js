@@ -1,9 +1,7 @@
 import { Body, Controller, Delete, Query, Get, HttpCode, HttpStatus, Param, Post, Put, Request,UseInterceptors, UploadedFile } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express/multer';
 import { CarsService } from './cars.service';
-import { GetCarsDto } from './dtos/getcars.dto';
 import { RegisterCarsDto } from './dtos/registercars.dto';
-import { UpdateCarDto } from './dtos/updatecars.dto';
 import { IsPublic } from 'src/auth/decorators/ispublic.decorator';
 import { uploadToS3 }  from './utils/uploadToS3.util'
 
@@ -15,11 +13,16 @@ export class CarsController {
         private readonly carService:CarsService,
     ){}
     
-    @Get()
+    @Get(':term?')
     @HttpCode(HttpStatus.OK)
     @IsPublic()
-    async getAllCars( ){
-        return await this.carService.getAllCars();
+    async getAllCars(@Param('term') term?: string) {
+        if (term) {
+            return await this.carService.find(term);
+            
+        } else {
+            return await this.carService.getAllCars();
+        }
     }
 
     @Get("user/:id")
@@ -30,7 +33,7 @@ export class CarsController {
         return await this.carService.getCarsByUser( id);
     }
 
-    @Get(':id')
+    @Get('id/:id')
     @HttpCode(HttpStatus.OK)
     @IsPublic()
     async getCarById(@Param() params){
@@ -41,6 +44,7 @@ export class CarsController {
     @Post('upload')
     @UseInterceptors(FileInterceptor('file'))
     async registerCar(@Request() req, @Body() dto: RegisterCarsDto, @UploadedFile() file: any) {
+        console.log(dto.kilometers)
         const folderName = process.env.CAR_FOLDER_NAME
         const urlfile = await uploadToS3(file, folderName);
         const { userId } = req.user;
@@ -71,12 +75,12 @@ export class CarsController {
     @IsPublic()
     async getFilter(@Param('filtro') filtro: string) {
         return await this.carService.getFilterByCategory(filtro);
-    }
+    } 
 
     @Post('filters')
     @HttpCode(HttpStatus.OK)
     @IsPublic()
-    async getFilteredMovies(@Body() filters: any) {
+    async getFilteredCars(@Body() filters: any) {
         return await this.carService.getCarsByFilter(filters);
     }
 }
