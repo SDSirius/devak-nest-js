@@ -75,9 +75,11 @@ export class CarsService {
             await this.addViewsToCar(carId);
             const car = await this.carModel.findOne({_id: carId});
 
+
             if (!car) {
                 throw new BadRequestException(CarMessagesHelper.UPDATE_CAR_NOT_FOUND);
             }
+            return car;
         } catch (error) {
             
         }
