@@ -44,7 +44,6 @@ export class CarsController {
     @Post('upload')
     @UseInterceptors(FileInterceptor('file'))
     async registerCar(@Request() req, @Body() dto: RegisterCarsDto, @UploadedFile() file: any) {
-        console.log(dto.kilometers)
         const folderName = process.env.CAR_FOLDER_NAME
         const urlfile = await uploadToS3(file, folderName);
         const { userId } = req.user;
@@ -63,11 +62,20 @@ export class CarsController {
     @Put(':id')
     @UseInterceptors(FileInterceptor('file'))
     async updateCarDetails(@Request() req, @Param() params, @Body() dto: any,@UploadedFile() file: any){
-        const folderName = process.env.CAR_FOLDER_NAME
-        const urlfile = await uploadToS3(file, folderName);
+        let urlFile = " ";
+        if (file) {
+            const folderName = process.env.CAR_FOLDER_NAME;
+            const result = await uploadToS3(file, folderName);
+    
+            if (typeof result === 'string') {
+                urlFile = result;
+            } 
+        } else {
+            urlFile = dto.file;
+        }
         const { userId } = req?.user;
         const { id } = params;
-        await this.carService.updateCar(id, userId, dto, urlfile as string);
+        await this.carService.updateCar(id, userId, dto, urlFile as string);
     }
 
     @Get("filters/:filtro")

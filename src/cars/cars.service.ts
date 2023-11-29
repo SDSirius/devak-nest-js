@@ -31,10 +31,8 @@ export class CarsService {
             { color: { $regex: new RegExp(term, 'i') } }
           ],
         };
-        console.log(term)
         this.logger.debug(`encontrou carros com a busca por ${term} !`);
         const result = await this.carModel.find(query);
-        console.log(result)
         return result;
       }
 
@@ -75,7 +73,6 @@ export class CarsService {
             await this.addViewsToCar(carId);
             const car = await this.carModel.findOne({_id: carId});
 
-
             if (!car) {
                 throw new BadRequestException(CarMessagesHelper.UPDATE_CAR_NOT_FOUND);
             }
@@ -87,18 +84,11 @@ export class CarsService {
 
     async insertCar(userId: string, dto: RegisterCarsDto, urlfile:string ) {
         try {
-            console.log(userId);
-            console.log(urlfile);
-            console.log(dto);
             const user = await this.userService.getUserById(userId);
-    
             this.logger.debug('registrando Carro no sistema do usuario - ' + user.name);
-            
             const existingPlate = await this.carModel.findOne({plate: dto.plate});
-
-    
+            
             if (!existingPlate){
-
                 const Car = {
                     user,
                     ...dto,
@@ -108,11 +98,7 @@ export class CarsService {
                 const createdCar = new this.carModel(Car);
                 return await createdCar.save();
             }else{
-                // throw new BadRequestException(CarMessagesHelper.CAR_PLATE_ALREADY_IN_USE);
-                console.log(userId);
-                console.log(urlfile);
-                console.log(dto);
-                return dto
+                throw new BadRequestException(CarMessagesHelper.CAR_PLATE_ALREADY_IN_USE);
             }
         } catch (error) {
             console.log(error)
@@ -126,7 +112,6 @@ export class CarsService {
             if (!car){
                 throw new BadRequestException(CarMessagesHelper.UPDATE_CAR_NOT_FOUND);
             }
-            console.log(car)
             this.logger.debug(`delete CarByUser - ${userId} - ${car.name}`);
             const soldCar ={
                 user:car.user,
@@ -154,12 +139,9 @@ export class CarsService {
             const car = await this.carModel.findOne({user, _id: carId});
             this.logger.debug(`update -  ${car.name} de ${user.name}(${user.email}) `);
 
-            console.log(car)
-
             if(!car){
                 throw new BadRequestException(CarMessagesHelper.UPDATE_CAR_NOT_FOUND);
             }
-            
             const newCarSpecs: UpdateCarDto = {};
 
             if (dto.name) newCarSpecs.name = dto.name;
@@ -186,11 +168,6 @@ export class CarsService {
             if (urlfile) newCarSpecs.file = urlfile;
             else newCarSpecs.file = car.file;
             
-            console.log("============================================================================================")
-            
-
-            console.log(newCarSpecs)
-
             await this.carModel.findByIdAndUpdate({_id: carId}, newCarSpecs);
             
         } catch (error) {

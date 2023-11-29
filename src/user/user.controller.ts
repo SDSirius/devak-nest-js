@@ -49,9 +49,17 @@ export class UserController {
     @HttpCode(HttpStatus.OK)
     @UseInterceptors(FileInterceptor('file'))
     async updateUser(@Request() req, @Body() dto: UpdateUserDto,@UploadedFile() file: any) {
-        const folderName = process.env.USER_FOLDER_NAME
-        const urlfile = await uploadToS3(file, folderName);
+        let urlFile = " ";
+        if (file) {
+            const folderName = process.env.CAR_FOLDER_NAME;
+            const result = await uploadToS3(file, folderName);
+            if (typeof result === 'string') {
+                urlFile = result;
+            } 
+        } else {
+            urlFile = dto.file;
+        }
         const { userId } = req?.user;
-        await this.userService.updateUser(userId, dto, urlfile as string);
+        await this.userService.updateUser(userId, dto, urlFile as string);
     }
 }
