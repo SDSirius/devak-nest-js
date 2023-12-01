@@ -5,9 +5,9 @@ export class GetCarsDto{
     brand:string;
     yearModel: string;
     color:string;
-    value:string;
+    value:number;
     plate:string;
-    kilometers:string;
+    kilometers:number;
     file:string;
     views:number;
 }

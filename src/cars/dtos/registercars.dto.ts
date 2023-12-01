@@ -9,11 +9,11 @@ export class RegisterCarsDto {
     @IsString({ message: CarMessagesHelper.CAR_BRAND_NOT_VALID })
     brand: string;
 
-    @IsString({ message: CarMessagesHelper.CAR_VALUE_NEEDED + " não é number" })
-    value:string;
+    @IsNumber({},{ message: CarMessagesHelper.CAR_VALUE_NEEDED + " não é number" })
+    value:number;
 
-    @IsString({ message: CarMessagesHelper.CAR_VALUE_NEEDED + " RegisterCarsDto = > kilometers " })
-    kilometers:string;
+    @IsNumber({},{ message: CarMessagesHelper.CAR_VALUE_NEEDED + " RegisterCarsDto = > kilometers " })
+    kilometers:number;
 
     @IsString({ message: CarMessagesHelper.CAR_MODEL_NOT_VALID })
     yearModel: string;

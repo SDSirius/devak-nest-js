@@ -1,4 +1,4 @@
-import { IsOptional, IsString, Length, Min } from "class-validator";
+import { IsOptional, IsString, Length, IsNumber } from "class-validator";
 import { CarMessagesHelper } from "../helpers/messages.helper";
 
 export class UpdateCarDto {
@@ -19,12 +19,12 @@ export class UpdateCarDto {
     color?: string;
 
     @IsOptional()
-    @IsString({ message: CarMessagesHelper.CAR_VALUE_NEEDED + "não é number" })
-    value?: string;
+    @IsNumber({},{ message: CarMessagesHelper.CAR_VALUE_NEEDED + "não é number" })
+    value?: number;
 
     @IsOptional()
-    @IsString({ message: CarMessagesHelper.CAR_VALUE_NEEDED + "kilometers não é number"  })
-    kilometers?: string;
+    @IsNumber({},{ message: CarMessagesHelper.CAR_VALUE_NEEDED + "kilometers não é number"  })
+    kilometers?: number;
 
     @IsOptional()
     @IsString({ message: CarMessagesHelper.CAR_PLATE_NEEDED })

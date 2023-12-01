@@ -20,10 +20,10 @@ export class Cars {
     yearModel:string;
 
     @Prop({required: true})
-    value:string;
+    value:number;
 
     @Prop({required: true})
-    kilometers:string;
+    kilometers:number;
 
     @Prop({required: true})
     color:string;
