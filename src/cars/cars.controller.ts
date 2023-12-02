@@ -43,11 +43,11 @@ export class CarsController {
 
     @Post('upload')
     @UseInterceptors(FileInterceptor('file'))
-    async registerCar(@Request() req, @Body() dto: RegisterCarsDto, @UploadedFile() file: any) {
+    async registerCar(@Request() req, @Body() dto: any, @UploadedFile() file: any) {
         const folderName = process.env.CAR_FOLDER_NAME
         const urlfile = await uploadToS3(file, folderName);
         const { userId } = req.user;
-        await this.carService.insertCar(userId, dto, urlfile as string);
+        await this.carService.insertCar(userId, dto as RegisterCarsDto, urlfile as string);
         return "Carro Registrado com sucesso!";
     }
 
