@@ -21,16 +21,18 @@ export class CarsService {
     ){}
 
     async find(term: string) {
+
         const query = {
           $or: [
             { name: { $regex: new RegExp(term, 'i') } },
             { brand: { $regex: new RegExp(term, 'i') } },
             { yearModel: { $regex: new RegExp(term, 'i') } },
-            { value: { $regex: new RegExp(term, 'i') } },
-            { kilometers: { $regex: new RegExp(term, 'i') } },
+            // { value: { $regex: new RegExp(term, 'i') } },
+            // { kilometers: { $regex: new RegExp(term, 'i') } },
             { color: { $regex: new RegExp(term, 'i') } }
           ],
         };
+        console.log(query)
         this.logger.debug(`encontrou carros com a busca por ${term} !`);
         const result = await this.carModel.find(query);
         return result;
