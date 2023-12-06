@@ -48,7 +48,7 @@ export class UserController {
     @Put()
     @HttpCode(HttpStatus.OK)
     @UseInterceptors(FileInterceptor('file'))
-    async updateUser(@Request() req, @Body() dto: UpdateUserDto,@UploadedFile() file: any) {
+    async updateUser(@Request() req, @Body() dto: UpdateUserDto,@UploadedFile() file?: any) {
         let urlFile = " ";
         if (file) {
             const folderName = process.env.CAR_FOLDER_NAME;

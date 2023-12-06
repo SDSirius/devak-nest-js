@@ -4,6 +4,7 @@ import { CarsService } from './cars.service';
 import { RegisterCarsDto } from './dtos/registercars.dto';
 import { IsPublic } from 'src/auth/decorators/ispublic.decorator';
 import { uploadToS3 }  from './utils/uploadToS3.util'
+import { UpdateCarDto } from './dtos/updatecars.dto';
 
 
 @Controller('cars')
@@ -55,13 +56,15 @@ export class CarsController {
     @HttpCode(HttpStatus.OK)
     async deleteSoldCar(@Request() req, @Param() params){
         const { userId } = req?.user;
+        console.log(userId)
         const { id } = params;
+        console.log(id)
         await this.carService.deleteSoldCar(userId, id);
     }
 
     @Put(':id')
     @UseInterceptors(FileInterceptor('file'))
-    async updateCarDetails(@Request() req, @Param() params, @Body() dto: any,@UploadedFile() file: any){
+    async updateCarDetails(@Request() req, @Param() params, @Body() dto: any,@UploadedFile() file?: any){
         let urlFile = " ";
         if (file) {
             const folderName = process.env.CAR_FOLDER_NAME;
@@ -75,7 +78,7 @@ export class CarsController {
         }
         const { userId } = req?.user;
         const { id } = params;
-        await this.carService.updateCar(id, userId, dto, urlFile as string);
+        await this.carService.updateCar(id, userId, dto as UpdateCarDto, urlFile as string);
     }
 
     @Get("filters/:filtro")
