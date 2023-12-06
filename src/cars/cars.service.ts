@@ -32,7 +32,6 @@ export class CarsService {
             { color: { $regex: new RegExp(term, 'i') } }
           ],
         };
-        console.log(query)
         this.logger.debug(`encontrou carros com a busca por ${term} !`);
         const result = await this.carModel.find(query);
         return result;

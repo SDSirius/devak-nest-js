@@ -56,9 +56,7 @@ export class CarsController {
     @HttpCode(HttpStatus.OK)
     async deleteSoldCar(@Request() req, @Param() params){
         const { userId } = req?.user;
-        console.log(userId)
         const { id } = params;
-        console.log(id)
         await this.carService.deleteSoldCar(userId, id);
     }
 
