@@ -36,7 +36,7 @@ O projeto DeVaK utiliza as seguintes tecnologias:
 git clone https://github.com/SDSirius/devak-nest-js
 
 # Conta no Banco de dados:
-Faça uma conta no site MongoDB.com.br, crie um cluster (ou use um compartilhado) e crie um Banco de dados dentro dele
+Faça uma conta no site MongoDB.com, crie um cluster (ou use um compartilhado) e crie um Banco de dados dentro dele
  
 # Congigure as variaveis:
 fazer uma copia do arquivo `.env.example` e renomear o novo arquivo de `.env`, e configurar as variáveis de ambiente no arquivo `.env` 
