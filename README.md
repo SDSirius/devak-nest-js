@@ -21,6 +21,7 @@ O projeto DeVaK utiliza as seguintes tecnologias:
 - Multer        1.4.5-lts.1
 - Passport-JWT  4.0.1
 - Mongoose      7.6.3
+- Mongoose      7.6.3
 
 ## Funcionalidades
 
@@ -32,11 +33,8 @@ O projeto DeVaK utiliza as seguintes tecnologias:
 #
 ### Configuração do ambiente de desenvolvimento
 ```bash
-# Clonar o repositório:
-git clone https://github.com/SDSirius/devak-nest-js
-
-# Conta no Banco de dados:
-Faça uma conta no site MongoDB.com.br, crie um cluster (ou use um compartilhado) e crie um Banco de dados dentro dele
+# clonar o repositório 
+git clone https://github.com/SDSirius/devak-nest-js.git
  
 # Congigure as variaveis:
 fazer uma copia do arquivo `.env.example` e renomear o novo arquivo de `.env`, e configurar as variáveis de ambiente no arquivo `.env` 
