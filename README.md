@@ -32,7 +32,7 @@ O projeto DeVaK utiliza as seguintes tecnologias:
 ### Configuração do ambiente de desenvolvimento
 ```bash
 # clonar o repositório 
-git clone https://github.com/SDSirius/devak-nest-js.git
+git clone https://github.com/SDSirius/devak-nest-js
  
 # Congigure as variaveis
 fazer uma copia do arquivo `.env.example` e renomear o novo arquivo de `.env.local`, e configurar as variáveis de ambiente no arquivo `.env.local` 
